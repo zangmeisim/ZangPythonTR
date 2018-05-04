@@ -1,0 +1,39 @@
+from bs4 import BeautifulSoup
+import requests
+import re
+import pyhdb
+import urllib
+import datetime
+import json
+import urllib.request
+
+url=requests.get('http://pic.sogou.com/pics/recommend?category=%B1%DA%D6%BD&from=home#%E5%85%A8%E9%83%A8%269')
+soup = BeautifulSoup(url.text,'html.parser')
+
+def getsogouimage(category,tag,length,path):
+    n=length
+    cate=category
+    tag=tag
+    imgs=requests.get('http://pic.sogou.com/pics/channel/getAllRecomPicByTag.jsp?category='+cate+'&tag='+tag+'&start=0&len='+str(n)+'&width=1366&height=768')
+    jds=json.loads(imgs.text)
+    jd=jds['all_items']
+    l_imgs=[]
+
+    imgs_url = []
+    for j in jd:
+        imgs_url.append(j['thumbUrl'])
+        m=0
+        #print(imgs_url)
+    l_imgs=imgs_url
+
+    for img_url in l_imgs:
+        print('*****' + str(m) + '.jpg *****' + '     Downloading....')
+        urllib.request.urlretrieve(img_url, path + str(m) + '.jpg')
+        m = m + 1
+    print('Download complted')
+
+    #print(l_imgs)
+
+
+
+getsogouimage('壁纸','全部','15','d:/download/')
